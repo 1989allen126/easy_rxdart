@@ -1,0 +1,36 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+coverage/
+
+# IDE related
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Cursor related
+.cursor/
+.cursorignore
+*.cursor
+
+# Documentation (exclude doc directory, but keep README.md)
+doc/
+
+# OS related
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+
