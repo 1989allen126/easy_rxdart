@@ -352,7 +352,7 @@ mixin RouteLifecycleMixin<T extends StatefulWidget> on State<T>
       predicate: (event) => [
         RouteLifecycleEvent.pushNext,
         RouteLifecycleEvent.popped
-      ].any((e) => e == event),
+      ].contains(event),
       onData: (_) => onData(),
       onError: onError,
       onDone: onDone,

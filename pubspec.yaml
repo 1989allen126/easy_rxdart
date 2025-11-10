@@ -1,8 +1,9 @@
 name: easy_rxdart
-description: RxDart扩展组件库
+description: RxDart扩展组件库，提供常用的Stream操作符和工具类封装，简化响应式编程
 version: 0.1.0
-homepage: https://github.com
-publish_to: none
+homepage: https://github.com/1989allen126/easy_rxdart
+repository: https://github.com/1989allen126/easy_rxdart
+issue_tracker: https://github.com/1989allen126/easy_rxdart/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -20,10 +21,12 @@ dependencies:
   shared_preferences: ^2.2.2
   uuid: ^4.5.1
   connectivity_plus: ^5.0.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.24.0
   flutter_lints: ^3.0.0
 
 # flutter:

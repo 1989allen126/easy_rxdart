@@ -10,6 +10,7 @@ Easy RxDart扩展组件库，提供常用的Stream操作符和工具类封装，
 - **数据转换扩展**：提供List、Iterable等数据结构的便捷转换方法
 - **Reactive扩展**：为Dio、Riverpod、Permission等第三方库提供响应式封装
 - **工具类封装**：提供防抖、限流、去重等常用工具类
+- **生命周期Mixin**：提供App生命周期和路由生命周期监听功能
 - **类型安全的API设计**：完善的类型定义和文档注释
 
 ## 安装
@@ -356,7 +357,86 @@ final reactiveResult = await reactive.whereEx([
 ]).asList();
 ```
 
-### 8. 工具类使用
+### 8. 生命周期Mixin
+
+#### App生命周期Mixin
+
+```dart
+import 'package:easy_rxdart/easy_rxdart.dart';
+
+class _MyPageState extends State<MyPage> with AppLifecycleMixin {
+  @override
+  void initState() {
+    super.initState();
+    // 监听应用生命周期变化
+    listenAppLifecycle(
+      onData: (state) {
+        print('应用状态: $state');
+        if (state == AppLifecycleState.paused) {
+          // 应用进入后台
+        } else if (state == AppLifecycleState.resumed) {
+          // 应用回到前台
+        }
+      },
+    );
+  }
+}
+```
+
+#### 路由生命周期Mixin
+
+```dart
+import 'package:easy_rxdart/easy_rxdart.dart';
+
+// 1. 在 MaterialApp 中配置全局观察器
+MaterialApp(
+  navigatorObservers: [LifecycleUtils.globalRouteObserver],
+  ...
+)
+
+// 2. 在路由页面中使用 Mixin
+class _MyPageState extends State<MyPage> with RouteLifecycleMixin {
+  // 方式1: 通过 override 方法（推荐）
+  @override
+  void onRoutePushed() {
+    super.onRoutePushed();
+    print('路由已推送 - 当前页面被推送到导航栈');
+  }
+
+  @override
+  void onRoutePopNext() {
+    super.onRoutePopNext();
+    print('回到当前页面 - 从下一个页面返回到当前页面');
+  }
+
+  // 方式2: 通过 Reactive Stream（支持链式操作）
+  @override
+  void initState() {
+    super.initState();
+    // 监听路由推送事件
+    listenRoutePushed(onData: () {
+      print('路由已推送');
+    });
+
+    // 监听路由返回事件
+    listenRoutePopNext(onData: () {
+      print('回到当前页面');
+    });
+
+    // 监听路由进入事件（推送或返回）
+    listenRouteEntered(onData: () {
+      print('进入当前页面');
+    });
+
+    // 监听路由退出事件（进入下一页或弹出）
+    listenRouteExited(onData: () {
+      print('退出当前页面');
+    });
+  }
+}
+```
+
+### 9. 工具类使用
 
 ```dart
 // 防抖函数
@@ -414,7 +494,8 @@ lib/
       │   └── ...
       └── mixins/                     # Mixin类
           ├── stream_mixins.dart      # Stream Mixin
-          └── app_lifecycle_mixin.dart # 应用生命周期Mixin
+          ├── app_lifecycle_mixin.dart # 应用生命周期Mixin
+          └── route_lifecycle_mixin.dart # 路由生命周期Mixin
 ```
 
 ## API文档
@@ -455,7 +536,8 @@ lib/
 1. **使用EasyModel进行状态管理**：对于需要状态管理的场景，推荐使用EasyModel
 2. **合理使用防抖和限流**：对于频繁触发的事件（如搜索输入、按钮点击），使用防抖或限流
 3. **使用Reactive扩展**：对于网络请求、权限申请等异步操作，使用Reactive扩展简化代码
-4. **及时取消订阅**：使用`listen`方法时，记得在`dispose`中取消订阅
+4. **使用生命周期Mixin**：对于需要监听应用或路由生命周期的场景，使用`AppLifecycleMixin`或`RouteLifecycleMixin`，订阅会自动管理
+5. **及时取消订阅**：使用`listen`方法时，记得在`dispose`中取消订阅（Mixin会自动管理）
 
 ## 许可证
 
